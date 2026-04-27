@@ -672,12 +672,17 @@ function setupMenu() {
   document.getElementById('playBtn').addEventListener('click', closeMenu);
   document.getElementById('listenBtn').addEventListener('click', closeMenu);
 
-  // 横向き判定 (複数手段OR / モバイルChromeでも確実に効くように)
+  // コンパクトモード判定: 「横向き」かつ「高さが小さい(=モバイル横画面)」のときのみ
+  // PCの横長ウィンドウは縦に余裕があるので隠さない
+  const COMPACT_MAX_HEIGHT = 500;
   const isLandscapeNow = () => {
-    if (window.innerWidth > window.innerHeight) return true;
-    if (window.matchMedia && window.matchMedia('(orientation: landscape)').matches) return true;
-    if (screen.orientation && screen.orientation.type && screen.orientation.type.indexOf('landscape') >= 0) return true;
-    return false;
+    const landscapeOrientation =
+      window.innerWidth > window.innerHeight ||
+      (window.matchMedia && window.matchMedia('(orientation: landscape)').matches) ||
+      (screen.orientation && screen.orientation.type && screen.orientation.type.indexOf('landscape') >= 0);
+    if (!landscapeOrientation) return false;
+    if (window.innerHeight >= COMPACT_MAX_HEIGHT) return false; // PC/タブレットは縦に余裕あり
+    return true;
   };
   const updateOrientation = () => {
     const isLandscape = isLandscapeNow();
