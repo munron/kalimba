@@ -1,0 +1,32 @@
+{
+  "name": "カリンバ練習",
+  "short_name": "カリンバ",
+  "description": "ブラウザで動く17鍵カリンバ練習アプリ",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#1d130b",
+  "background_color": "#1d130b",
+  "icons": [
+    {
+      "src": "icon/128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon/1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon/1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

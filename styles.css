@@ -1,0 +1,672 @@
+/* ============================================================
+ * Kalimba Practice — warm wood theme
+ * Palette: 暖色系ダーク (アイコンの木目調に合わせて)
+ * ============================================================ */
+
+:root {
+  --bg:           #1d130b;    /* very dark warm brown */
+  --surface:      #2a1d12;    /* card/panel surface */
+  --surface-2:    #382617;
+  --border:       rgba(245, 220, 180, 0.10);
+  --border-2:     rgba(245, 220, 180, 0.18);
+
+  --text:         #fbf0d8;    /* warm cream */
+  --text-mute:    #c9b89a;    /* warm tan */
+  --text-soft:    #9c8268;    /* muted warm */
+
+  --wood-1:       #e8b06b;    /* light honey */
+  --wood-2:       #c0884f;    /* mid wood */
+  --wood-3:       #8a5a30;    /* dark wood */
+  --wood-4:       #5a3818;    /* very dark wood (outline) */
+
+  --honey:        #f3c66b;    /* falling note */
+  --honey-2:      #d99a3a;
+  --leaf:         #a8c97a;    /* hit color */
+  --leaf-2:       #6da64a;
+  --rose:         #e89aaa;    /* miss / accent */
+  --rose-2:       #c87487;
+
+  --tine-top:     #fbf6e8;    /* tine cream top */
+  --tine-mid:     #e8dbbd;
+  --tine-bot:     #6f4e30;    /* tine bottom dark wood */
+}
+
+/* ---------- Reset & base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at top, #2c1d10 0%, var(--bg) 60%, #150c06 100%);
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+button { font-family: inherit; }
+
+/* ---------- 上部UIラッパー ---------- */
+.top-ui {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- メニューボタン (横画面用) ---------- */
+.menu-btn {
+  display: none;
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  left: 12px;
+  z-index: 60;
+  background: rgba(232, 176, 107, 0.12);
+  border: 1px solid rgba(232, 176, 107, 0.3);
+  color: var(--text);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.menu-btn:active { transform: scale(0.94); }
+.menu-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 12, 6, 0.55);
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  padding-top: max(10px, env(safe-area-inset-top));
+  flex-shrink: 0;
+}
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+.title-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.icon-btn {
+  background: rgba(232, 176, 107, 0.08);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* ---------- Tabs ---------- */
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 8px;
+  flex-shrink: 0;
+}
+.tab {
+  flex: 1;
+  background: rgba(232, 176, 107, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-mute);
+  padding: 8px 0;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.tab.active {
+  background: linear-gradient(135deg, var(--wood-1) 0%, var(--wood-2) 100%);
+  color: #2a1808;
+  border-color: transparent;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(192, 136, 79, 0.35);
+}
+
+/* ---------- Song bar ---------- */
+.song-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 16px 8px;
+  gap: 10px;
+  flex-shrink: 0;
+  transition: opacity 0.18s ease;
+}
+body.mode-free .song-bar {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.song-info { flex: 1; min-width: 0; }
+#songSelect {
+  width: 100%;
+  background: rgba(232, 176, 107, 0.06);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+.song-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.score {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--text-mute);
+  min-width: 56px;
+  text-align: right;
+}
+.primary-btn {
+  background: linear-gradient(135deg, var(--wood-1) 0%, var(--wood-2) 100%);
+  border: none;
+  color: #2a1808;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(192, 136, 79, 0.3);
+}
+.primary-btn:active { transform: translateY(1px); }
+.primary-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+.primary-btn.full { width: 100%; padding: 12px; font-size: 14px; }
+
+.primary-btn.outline {
+  background: transparent;
+  color: var(--wood-1);
+  border: 1px solid var(--wood-1);
+  box-shadow: none;
+}
+.primary-btn.outline:hover { background: rgba(232,176,107,0.08); }
+.primary-btn.outline.active {
+  background: linear-gradient(135deg, var(--wood-1) 0%, var(--wood-2) 100%);
+  color: #2a1808;
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(192, 136, 79, 0.3);
+}
+
+/* ---------- Play area ---------- */
+.play-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+body.mode-song .play-area { justify-content: flex-end; }
+
+.notes-track {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+.falling-note {
+  position: absolute;
+  top: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--honey) 0%, var(--honey-2) 100%);
+  box-shadow:
+    0 0 16px rgba(243, 198, 107, 0.45),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a2e00;
+  will-change: transform;
+}
+.falling-note.hit {
+  background: linear-gradient(180deg, var(--leaf) 0%, var(--leaf-2) 100%);
+  box-shadow: 0 0 24px rgba(168, 201, 122, 0.7);
+  animation: hit-pop 0.3s ease forwards;
+}
+.falling-note.miss {
+  background: linear-gradient(180deg, var(--rose) 0%, var(--rose-2) 100%);
+  opacity: 0.5;
+}
+@keyframes hit-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.hit-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,176,107,0.55), transparent);
+  pointer-events: none;
+  z-index: 3;
+}
+body.mode-free .hit-line,
+body.mode-free .notes-track { display: none; }
+
+.overlay-msg {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  font-weight: 700;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.overlay-msg.show { animation: msg-pop 0.6s ease forwards; }
+.overlay-msg.perfect { color: var(--honey); }
+.overlay-msg.good    { color: var(--leaf); }
+.overlay-msg.miss    { color: var(--rose); }
+@keyframes msg-pop {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0.8); }
+  20%  { opacity: 1; transform: translateX(-50%) scale(1.05); }
+  80%  { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(1); }
+}
+
+/* ---------- Kalimba (wooden body, アイコン準拠) ---------- */
+.kalimba-wrap {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 12px 12px max(16px, env(safe-area-inset-bottom));
+  z-index: 4;
+  min-height: 0;
+}
+body.mode-song .kalimba-wrap { flex: 0 0 38vh; }
+@media (orientation: landscape) and (max-height: 480px) {
+  body.mode-song .kalimba-wrap { flex: 0 0 50vh; }
+}
+
+.kalimba {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  align-items: flex-start;          /* 上端揃え (中央が下に伸びる) */
+  justify-content: center;
+  gap: 5px;
+  padding: 22px 18px 64px;
+  touch-action: none;               /* スワイプでスクロール/ズームを抑制 */
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(255,235,200,0.18) 0%, transparent 55%),
+    linear-gradient(180deg, var(--wood-1) 0%, var(--wood-2) 45%, var(--wood-3) 90%, #6b4220 100%);
+  border-radius: 28px 28px 22px 22px / 28px 28px 32px 32px;
+  box-shadow:
+    inset 0 4px 6px rgba(255,235,200,0.25),
+    inset 0 -10px 20px rgba(0,0,0,0.3),
+    0 14px 32px rgba(0,0,0,0.55);
+  overflow: hidden;
+  border: 2px solid var(--wood-4);
+}
+/* 木目テクスチャ */
+.kalimba::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(90, 56, 24, 0.07) 0px,
+    rgba(90, 56, 24, 0.07) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+  pointer-events: none;
+}
+/* ハート型サウンドホール (アイコン準拠) — テキスト変異形セレクタで絵文字化を抑制 */
+.kalimba::after {
+  content: '\2665\FE0E';
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+  line-height: 1;
+  color: #2a1808;
+  font-variant-emoji: text;
+  text-shadow:
+    0 -1px 0 rgba(0,0,0,0.6),
+    0 1px 0 rgba(255,235,200,0.18);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---------- Tines (アイコンの白い舌) ---------- */
+.tine {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 38px;
+  background:
+    linear-gradient(180deg,
+      var(--tine-top) 0%,
+      #f3ebd4 35%,
+      var(--tine-mid) 70%,
+      var(--tine-bot) 92%,
+      #4f361b 100%);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.06s ease, filter 0.06s ease, box-shadow 0.18s ease;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.7),
+    inset 0 -2px 0 rgba(0,0,0,0.15),
+    0 3px 6px rgba(0,0,0,0.3);
+  outline: 1.5px solid rgba(60, 36, 16, 0.5);  /* アイコンの濃い茶色のアウトライン */
+  outline-offset: -1px;
+}
+.tine:hover { filter: brightness(1.04); }
+.tine.pressed,
+.tine:active {
+  transform: translateY(3px) scaleY(0.99);
+  filter: brightness(0.92);
+}
+.tine.glow {
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.7),
+    0 0 22px 5px rgba(243, 198, 107, 0.85);
+}
+
+/* ---------- Tine labels ---------- */
+.tine .key-hint {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 700;
+  color: rgba(60, 36, 16, 0.55);
+  pointer-events: none;
+  line-height: 1;
+}
+@media (hover: none) and (pointer: coarse) {
+  .tine .key-hint { display: none; }
+}
+
+.tine .label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  color: #3d2817;
+  white-space: nowrap;
+}
+.tine .label .num {
+  font-size: clamp(11px, 2.6vmin, 14px);
+  font-weight: 800;
+  line-height: 1;
+}
+.tine .label .dots {
+  font-size: 9px;
+  line-height: 0.55;
+  letter-spacing: 2px;
+  height: 7px;
+  margin-bottom: 1px;
+  color: #3d2817;
+}
+.tine .label .dots:empty { display: none; }
+
+/* ---------- Modal ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 12, 6, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+.modal[hidden] { display: none; }
+.modal-card {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 18px;
+  padding: 22px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+.modal-card h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.start-card { text-align: center; }
+.start-card p { color: var(--text-mute); font-size: 13px; line-height: 1.6; }
+.start-card h2 {
+  margin: 4px 0 6px;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+}
+.start-card .tagline {
+  margin: 0 0 16px;
+  color: var(--text-soft);
+  font-size: 13px;
+}
+.hero-icon {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 14px;
+  border-radius: 26px;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.5),
+    0 2px 0 rgba(255,235,200,0.06) inset;
+}
+.feature-list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  text-align: left;
+  background: rgba(232, 176, 107, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.feature-list li {
+  font-size: 13px;
+  color: var(--text-mute);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.feature-list .bullet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, var(--wood-1) 0%, var(--wood-2) 100%);
+  color: #2a1808;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.muted { color: var(--text-soft); }
+.small { font-size: 11px; }
+
+.start-card .credits {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.start-card .credits a {
+  color: var(--text-mute);
+  text-decoration: none;
+}
+.start-card .credits a:hover { color: var(--text); }
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.setting-row:first-of-type { border-top: none; }
+.setting-row label:first-child {
+  font-size: 13px;
+  color: var(--text-mute);
+  flex: 1 0 100%;
+  margin-bottom: 6px;
+}
+.setting-row input[type="range"] { flex: 1; accent-color: var(--wood-1); }
+.range-val {
+  font-size: 12px;
+  color: var(--text-mute);
+  min-width: 50px;
+  text-align: right;
+}
+
+.seg {
+  display: flex;
+  background: rgba(232, 176, 107, 0.05);
+  border-radius: 999px;
+  padding: 3px;
+  flex: 1;
+}
+.seg button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-mute);
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.seg button.active {
+  background: linear-gradient(135deg, var(--wood-1) 0%, var(--wood-2) 100%);
+  color: #2a1808;
+  font-weight: 700;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 220, 180, 0.15);
+  border-radius: 999px;
+  transition: 0.2s;
+}
+.slider::before {
+  content: '';
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+.switch input:checked + .slider {
+  background: linear-gradient(135deg, var(--wood-1) 0%, var(--wood-2) 100%);
+}
+.switch input:checked + .slider::before { transform: translateX(20px); }
+
+/* ---------- Landscape (横画面: 上部UI を JS で隠す) ---------- */
+body.is-landscape .top-ui { display: none !important; }
+
+body.is-landscape.menu-open .top-ui {
+  display: flex !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(29, 19, 11, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 8px 12px 8px 56px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.55);
+  animation: slide-down 0.22s ease;
+}
+@keyframes slide-down {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+body.is-landscape .menu-btn { display: flex; }
+body.is-landscape.menu-open .menu-backdrop { display: block; opacity: 1; }
+body.is-landscape.menu-open .menu-btn {
+  background: rgba(232, 176, 107, 0.3);
+  border-color: var(--wood-1);
+}
+
+body.is-landscape .play-area { padding-top: 0; }
+body.is-landscape .topbar { padding: 4px 8px; }
+body.is-landscape .topbar .title { font-size: 13px; }
+body.is-landscape .tabs { padding: 0 8px 4px; }
+body.is-landscape .tab { padding: 5px 0; font-size: 12px; }
+body.is-landscape .song-bar { padding: 2px 8px 4px; }
+body.is-landscape .kalimba { padding: 14px 14px 50px; gap: 4px; }
+body.is-landscape .tine { max-width: 50px; }
+
+/* small portrait phones */
+@media (max-width: 380px) {
+  .kalimba { padding: 18px 14px 56px; gap: 4px; }
+  .tine { max-width: 32px; }
+  .tine .key-hint { font-size: 10px; top: 8px; }
+}

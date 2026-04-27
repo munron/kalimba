@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d130b">
+<title>カリンバ練習 - ブラウザで遊べる17鍵カリンバ</title>
+<meta name="description" content="ブラウザで動く17鍵カリンバ練習アプリ。落下ノーツに合わせて曲を演奏したり、自由に音を鳴らせます。">
+
+<link rel="icon" type="image/png" sizes="128x128" href="icon/128.png">
+<link rel="icon" type="image/png" sizes="1024x1024" href="icon/1024.png">
+<link rel="apple-touch-icon" href="icon/1024.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<meta property="og:title" content="カリンバ練習">
+<meta property="og:description" content="ブラウザで動く17鍵カリンバ練習アプリ。落下ノーツに合わせて曲を演奏できます。">
+<meta property="og:image" content="icon/1024.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- 横画面で表示されるメニュートグルボタン (上部UIを呼び出す) -->
+<button class="menu-btn" id="menuBtn" aria-label="メニュー">☰</button>
+<div class="menu-backdrop" id="menuBackdrop"></div>
+
+<div class="top-ui" id="topUi">
+  <header class="topbar">
+    <div class="title">
+      <img class="title-icon" src="icon/128.png" alt="" width="28" height="28">
+      <span>カリンバ練習</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="settingsBtn" aria-label="設定">⚙</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-mode="free" role="tab">フリー演奏</button>
+    <button class="tab" data-mode="song" role="tab">曲練習</button>
+  </nav>
+
+  <section class="song-bar" id="songBar">
+    <div class="song-info">
+      <select id="songSelect"></select>
+    </div>
+    <div class="song-controls">
+      <span class="score" id="score">0 / 0</span>
+      <button class="primary-btn outline" id="listenBtn">🎧 視聴</button>
+      <button class="primary-btn" id="playBtn">▶ 演奏</button>
+    </div>
+  </section>
+</div>
+
+<main class="play-area" id="playArea">
+  <div class="notes-track" id="notesTrack"></div>
+  <div class="hit-line" id="hitLine"></div>
+  <div class="overlay-msg" id="overlayMsg"></div>
+  <div class="kalimba-wrap" id="kalimbaWrap">
+    <div class="kalimba" id="kalimba"></div>
+  </div>
+</main>
+
+<!-- Settings modal -->
+<div class="modal" id="settingsModal" hidden>
+  <div class="modal-card" role="dialog" aria-labelledby="settingsTitle">
+    <h2 id="settingsTitle">設定</h2>
+
+    <div class="setting-row">
+      <label>音名表示</label>
+      <div class="seg" id="labelStyleSeg">
+        <button data-val="doremi" class="active">ドレミ</button>
+        <button data-val="number">1234</button>
+        <button data-val="abc">CDE</button>
+        <button data-val="none">なし</button>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <label>ノーツの落下スピード</label>
+      <input type="range" id="speedRange" min="2" max="6" step="0.5" value="3.5">
+      <span class="range-val" id="speedVal">3.5秒</span>
+    </div>
+
+    <div class="setting-row">
+      <label>音量</label>
+      <input type="range" id="volumeRange" min="-30" max="0" step="1" value="-8">
+    </div>
+
+    <div class="setting-row">
+      <label>振動フィードバック</label>
+      <label class="switch">
+        <input type="checkbox" id="vibrateToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <button class="primary-btn full" id="settingsClose">閉じる</button>
+  </div>
+</div>
+
+<!-- Tap-to-start overlay -->
+<div class="modal" id="startModal">
+  <div class="modal-card start-card">
+    <img class="hero-icon" src="icon/1024.png" alt="" width="112" height="112">
+    <h2>カリンバ練習</h2>
+    <p class="tagline">ブラウザで遊べる<br>17鍵カリンバ練習アプリ</p>
+    <ul class="feature-list">
+      <li><span class="bullet">♪</span> 自由に弾けるフリー演奏</li>
+      <li><span class="bullet">♪</span> 落下ノーツで曲を練習</li>
+      <li><span class="bullet">♪</span> 自動演奏で耳コピもサポート</li>
+    </ul>
+    <button class="primary-btn full" id="startAppBtn">はじめる</button>
+    <p class="muted small">※ 初回起動時に音源データを読み込むため数秒かかります</p>
+    <p class="muted credits">
+      音源: <a href="https://hanamoto-project.com/other/soudfont-kalimba.html" target="_blank" rel="noopener">hanamoto-project.com</a>
+      ・Built with <a href="https://tonejs.github.io/" target="_blank" rel="noopener">Tone.js</a>
+    </p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+<script src="songs.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
