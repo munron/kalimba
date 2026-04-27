@@ -723,8 +723,24 @@ function setupKeyboard() {
   });
 }
 
+// ---------- ダブルタップズーム抑止 (touch-action を尊重しないブラウザ用の保険) ----------
+function preventDoubleTapZoom() {
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 320) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
+  // gesturestart は iOS Safari のピンチ/ダブルタップズームを直接ブロック
+  document.addEventListener('gesturestart', (e) => e.preventDefault());
+}
+
 // ---------- 起動 ----------
 function init() {
+  preventDoubleTapZoom();
   applyModeClass('free');
   loadSongs();
   renderKalimba();

@@ -32,7 +32,11 @@
 }
 
 /* ---------- Reset & base ---------- */
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after {
+  box-sizing: border-box;
+  /* touch-action は継承されないので全要素に明示 (ダブルタップズーム抑止) */
+  touch-action: manipulation;
+}
 html, body {
   margin: 0;
   padding: 0;
@@ -41,7 +45,7 @@ html, body {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  -webkit-touch-callout: none;
 }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
