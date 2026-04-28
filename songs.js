@@ -196,62 +196,108 @@ const SONGS = [
   /* ============================================================
    * Hedwig's Theme (ヘドウィグのテーマ) — Harry Potter より
    * ------------------------------------------------------------
-   * 原曲: E minor / 6/8。カリンバ向けに A minor へ完全4度上移調
-   *   (E→A, F#→B, G→C, A→D, B→E, C→F, D→G)
-   * Chromatic note は ディアトニック化:
-   *   - C# (transposed→F#) → F に置換
-   *   - Bb (transposed→Eb) → D に置換
+   * 出典: kalimbatabs.net のカリンバ専用タブ譜
+   *   E A C^ B A E^ D^ B  /  A C^ B G B E E
+   *   /  A C^ B A E^ G^ F^ E^ C^ E^ C^
+   *   /  A E C^ A C^ E^ C^ E^ C^
+   *   /  F^ E^ D^ B C^ E^ D^ B C^
+   *   /  E^ C^ E^ C^ E^ C^
+   *   /  G^ F^ E^ B C^ D^ B A C^
+   *
+   * オクターブ: 無印=4オクターブ, ^=5オクターブ
+   *   (上のオクターブだと +24半音シフトになる音が増えて薄く聞こえるため
+   *    下オクターブを採用して実機サンプル中心の音色を活かす)
+   *
+   * 拍子: 6/8 → 4/4で読み (1拍 = 4分音符 / 1小節 = 3拍)
+   *   付点4分 = 1.5拍, 4分 = 1拍, 8分 = 0.5拍
    * ============================================================ */
   {
     id: "hedwigs-theme",
     title: "ヘドウィグのテーマ",
     composer: "ジョン・ウィリアムズ",
-    note: "ハリー・ポッターより / A minorに移調",
-    bpm: 110,
-    countInBeats: 4,
+    note: "ハリー・ポッターより / A minor",
+    bpm: 100,
+    countInBeats: 6,
     notes: [
-      // ===== 主題 (有名な冒頭) ====================================
-      // 原: B - E - G F# E - B - A - F#
-      { beat: 0,    n: "E5", len: 1.5 },  // B
-      { beat: 1.5,  n: "A5", len: 1.5 },  // E
-      { beat: 3,    n: "C6", len: 0.5 },  // G
-      { beat: 3.5,  n: "B5", len: 0.5 },  // F#
-      { beat: 4,    n: "A5", len: 2 },    // E
-      { beat: 6,    n: "E6", len: 3 },    // B (high)
-      { beat: 9,    n: "D6", len: 1.5 },  // A
-      { beat: 10.5, n: "B5", len: 1.5 },  // F#
-      { beat: 12,   n: "A5", len: 3 },    // E (held)
+      // ===== Phrase 1: 主題 ========================================
+      // | E (h.) | A (q.) C B A (e e e) | E^ (h.) | D^ (q.) B (q.) |
+      { beat: 0,    n: "E4", len: 3.0 },   // B (held)
+      { beat: 3,    n: "A4", len: 1.5 },   // E
+      { beat: 4.5,  n: "C5", len: 0.5 },   // G
+      { beat: 5,    n: "B4", len: 0.5 },   // F#
+      { beat: 5.5,  n: "A4", len: 0.5 },   // E
+      { beat: 6,    n: "E5", len: 3.0 },   // B (high, held)
+      { beat: 9,    n: "D5", len: 1.5 },   // A
+      { beat: 10.5, n: "B4", len: 1.5 },   // F#
 
-      // ===== 第2フレーズ ==========================================
-      // 原: E - G - F# D - F - B  (F → Bb は B に代用)
-      { beat: 15,   n: "A5", len: 1.5 },  // E
-      { beat: 16.5, n: "C6", len: 1.5 },  // G
-      { beat: 18,   n: "B5", len: 0.5 },  // F#
-      { beat: 18.5, n: "G5", len: 0.5 },  // D
-      { beat: 19,   n: "B5", len: 2 },    // F (=Bb→B)
-      { beat: 21,   n: "E6", len: 3 },    // B
+      // ===== Phrase 2: 応答フレーズ ================================
+      // | A (q.) C^ (q.) | B G (e e) B (q.) | E (h.) | E (h.) |
+      { beat: 12,   n: "A4", len: 1.5 },
+      { beat: 13.5, n: "C5", len: 1.5 },
+      { beat: 15,   n: "B4", len: 0.5 },
+      { beat: 15.5, n: "G4", len: 0.5 },
+      { beat: 16,   n: "B4", len: 2.0 },
+      { beat: 18,   n: "E4", len: 3.0 },
+      { beat: 21,   n: "E4", len: 3.0 },
 
-      // ===== 主題再現 + 下行 ======================================
-      // 原: B - E - G F# E - B - D - C# - C  (C# → F に代用)
-      { beat: 24,   n: "E5", len: 1.5 },
-      { beat: 25.5, n: "A5", len: 1.5 },
-      { beat: 27,   n: "C6", len: 0.5 },
-      { beat: 27.5, n: "B5", len: 0.5 },
-      { beat: 28,   n: "A5", len: 2 },
-      { beat: 30,   n: "E6", len: 3 },
-      { beat: 33,   n: "G5", len: 1.5 },  // D
-      { beat: 34.5, n: "F5", len: 1.5 },  // C# → F
-      { beat: 36,   n: "F5", len: 3 },    // C
+      // ===== Phrase 3: 主題発展 + 高音上昇 ========================
+      // | A (q.) C^ (q.) | B A (e e) E^ (q.) | G^ F^ E^ (e e e) | C^ E^ C^ (e e q) |
+      { beat: 24,   n: "A4", len: 1.5 },
+      { beat: 25.5, n: "C5", len: 1.5 },
+      { beat: 27,   n: "B4", len: 0.5 },
+      { beat: 27.5, n: "A4", len: 0.5 },
+      { beat: 28,   n: "E5", len: 2.0 },
+      { beat: 30,   n: "G5", len: 0.5 },
+      { beat: 30.5, n: "F5", len: 0.5 },
+      { beat: 31,   n: "E5", len: 0.5 },
+      { beat: 31.5, n: "C5", len: 0.5 },
+      { beat: 32,   n: "E5", len: 0.5 },
+      { beat: 32.5, n: "C5", len: 1.5 },
 
-      // ===== 終結 =================================================
-      // 原: A - C - B - Bb - B - G - E (Bb → D に代用)
-      { beat: 39,   n: "D5", len: 1.5 },  // A
-      { beat: 40.5, n: "F5", len: 1.5 },  // C
-      { beat: 42,   n: "E5", len: 0.5 },  // B
-      { beat: 42.5, n: "D5", len: 0.5 },  // Bb → D
-      { beat: 43,   n: "E5", len: 2 },    // B
-      { beat: 45,   n: "C5", len: 3 },    // G
-      { beat: 48,   n: "A4", len: 4 },    // E (final)
+      // ===== Phrase 4: アルペジオ風 ================================
+      // | A E (q. q.) | C^ A C^ E^ (e e e q) | C^ E^ C^ (e e h) |
+      { beat: 34,   n: "A4", len: 1.5 },
+      { beat: 35.5, n: "E4", len: 0.5 },
+      { beat: 36,   n: "C5", len: 0.5 },
+      { beat: 36.5, n: "A4", len: 0.5 },
+      { beat: 37,   n: "C5", len: 0.5 },
+      { beat: 37.5, n: "E5", len: 1.0 },
+      { beat: 38.5, n: "C5", len: 0.5 },
+      { beat: 39,   n: "E5", len: 0.5 },
+      { beat: 39.5, n: "C5", len: 2.5 },
+
+      // ===== Phrase 5: クライマックス再現 ==========================
+      // | F^ E^ (q. q.) | D^ B (q. q.) | C^ E^ D^ B C^ (e e e e q) |
+      { beat: 42,   n: "F5", len: 1.5 },
+      { beat: 43.5, n: "E5", len: 1.5 },
+      { beat: 45,   n: "D5", len: 1.5 },
+      { beat: 46.5, n: "B4", len: 1.5 },
+      { beat: 48,   n: "C5", len: 0.5 },
+      { beat: 48.5, n: "E5", len: 0.5 },
+      { beat: 49,   n: "D5", len: 0.5 },
+      { beat: 49.5, n: "B4", len: 0.5 },
+      { beat: 50,   n: "C5", len: 1.0 },
+
+      // ===== Phrase 6: 揺れパターン (eighth notes alternating) =====
+      // | E^ C^ E^ C^ E^ C^ (all eighths) |
+      { beat: 51,   n: "E5", len: 0.5 },
+      { beat: 51.5, n: "C5", len: 0.5 },
+      { beat: 52,   n: "E5", len: 0.5 },
+      { beat: 52.5, n: "C5", len: 0.5 },
+      { beat: 53,   n: "E5", len: 0.5 },
+      { beat: 53.5, n: "C5", len: 0.5 },
+
+      // ===== Phrase 7: 終結カデンツ ================================
+      // | G^ F^ E^ (e e q) | B C^ D^ B (e e e e) | A C^ (h.) |
+      { beat: 54,   n: "G5", len: 0.5 },
+      { beat: 54.5, n: "F5", len: 0.5 },
+      { beat: 55,   n: "E5", len: 1.0 },
+      { beat: 56,   n: "B4", len: 0.5 },
+      { beat: 56.5, n: "C5", len: 0.5 },
+      { beat: 57,   n: "D5", len: 0.5 },
+      { beat: 57.5, n: "B4", len: 0.5 },
+      { beat: 58,   n: "A4", len: 1.0 },
+      { beat: 59,   n: "C5", len: 4.0 },   // final
     ],
   },
 ];
